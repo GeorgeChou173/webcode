@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Build a Markdown Previewer</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> 
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+<script>
+var strH1="";
+var strH3="";
+var strH4="";
+var strCode="";
+var strPara ="";
+var strWeird="";
+var strSymbol= "";
+var strFunc = "";
+var strVal="";
+
+function myParse(){
+  console.log("begin");
+   strVal = document.getElementById("edit-content");
+  console.log(strVal.value.length);
+ for (var i =0 ; i < strVal.value.length;i++){
+   console.log(i);
+   switch (strVal.value[i]){
+     case "#":
+       console.log("#data->"+ strVal.value[i]);
+       makeCallHTML();
+       console.log("new"+strSymbol);
+       strSymbol = strSymbol +strVal.value[i];
+       console.log(strSymbol);
+       break;
+     case  "*":
+       console.log("*");
+       makeCallHTML();
+       strSymbol=strSymbol +  strVal.value[i];
+       break;
+     case  "-":
+       console.log("-");
+       makeCallHTML();
+       strSymbol=strSymbol +  strVal.value[i];
+       break;
+     default:
+       console.log("dada--parameter");
+     separateFunc(strVal.value[i]);
+              
+   }   
+   
+ }
+ makeCallHTML();
+}
+
+function separateFunc(dataElem){
+  console.log("separae=>"+dataElem);
+  if (strSymbol == "###" || strFunc == "H1") {
+      console.log("dada=>"+strSymbol + "func" + strFunc);
+    strFunc = "H1";
+    console.log("dada1=>"+strH1);
+    strH1 = strH1 + dataElem;
+    console.log("dada2=>"+strH1);
+    strSymbol = "";
+    console.log("dada3=>"+strH1);
+  } else if (strSymbol == "##" || strFunc == "H3"){
+    strFunc ="H3";
+    strH3 = strH3 + dataElem;
+    strSymbol = "";
+  } else if (strSymbol == "#" || strFunc == "H4"){
+    strFunc ="H4";
+    strH4 = strH4 + dataElem;
+    strSymbol = "";
+  } else if (strSymbol == "**" || strFunc == "code"){
+    strFunc = "code";    
+    strCode = strCode + dataElem;
+    strSymbol = "";
+  } else if (strSymbol == "-" || strFunc == "p"){
+    strFunc = "p";
+    strPara = strPara + dataElem;
+    strSymbol = "";
+  } else {
+    strWeird = strWeird + dataElem;
+  }
+  console.log("end dada=>"+dataElem+"func"+strFunc+"sym"+strSymbol);
+}
+
+function makeCallHTML(){
+  var hostVar;
+  console.log("makecall"+ strSymbol+strFunc);
+  if (strSymbol == "" && strFunc == "")         {
+      return ;
+     }
+     console.log("switch"+strFunc);   
+  switch (strFunc){
+    case "H1":
+    console.log(strH1);
+      hostVar = document.getElementById("edit-preview");
+  hostVar.insertAdjacentHTML("afterend", 
+          "<H1>" + strH1 + "</H1><br><hr><br>");
+      strFunc = "";                       
+      break;                        
+    case "H3":
+      hostVar = document.getElementById("edit-preview");
+  hostVar.insertAdjacentHTML("afterend", "<H3>" + strH3 + "</H3><br>");
+      strFunc = "";                       
+      break;                        
+    case "H4":
+       hostVar = document.getElementById("edit-preview");
+  hostVar.insertAdjacentHTML("afterend", "<H4>" + strH4 + "</H4><br>");
+      strFunc = "";                       
+      break;                        
+    case "code":
+       hostVar = document.getElementById("edit-preview");
+  hostVar.insertAdjacentHTML("afterend", "<code>" + strCode + "</code><br>");
+      strFunc = "";                       
+      break;                        
+    case "p":
+      hostVar = document.getElementById("edit-preview");
+  hostVar.insertAdjacentHTML("afterend", "<p>" + strPara + "</p><br>");
+      strFunc = "";                       
+      break;
+    default:
+      return;
+  }
+}
+</script>
+<style>
+    #main-content{
+  position:relative;
+  background-color:pink;
+  border:1px solid blue;
+  width:400px;
+  height:390px;
+}
+#preview-content{
+  position:relative;
+  background-color:orange;
+  border:1px solid blue;
+  width:400px;
+  height:390px;
+  left:50px; 
+}
+#editor{
+  display:block;
+  background-color:purple;
+  color:white;
+  font-size:15px;
+}
+#preview{
+  display:block;
+  background-color:purple;
+  color:white;
+  font-size:15px;
+}
+#edit-content {
+    width:100%;  
+}
+
+</style>
+</head>
+<body>
+<div class="container">     
+     <div class="row">
+        <div class="col-md-6" id="main-content">   
+          <div class="row" id="editor">     
+              <span class="glyphicon glyphicon-pencil">Editor
+             </span>
+          </div>
+          <div class="row">
+            <textarea name="text-data" rows="18" id="edit-content" onchange="myParse()">
+At w3schools.com you will learn how to make a website. They offer free tutorials in all web development technologies.
+</textarea>
+          </div>
+        </div>
+        <div class="col-md-6" id="preview-content"> 
+          <div class="row" id="preview">
+            <span class="glyphicon glyphicon-pencil">Test 2 Previewer
+             </span>
+          </div>
+          <div class="row" id="edit-preview">
+          </div>
+        </div> 
+     </div>         
+</div> 
+</body>
+</html>
